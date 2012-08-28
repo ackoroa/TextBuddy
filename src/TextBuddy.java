@@ -3,7 +3,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -46,12 +47,12 @@ public class TextBuddy {
 	else if (commandWord.equals("add"))
 	    add(commandLine, currentFile);
 	else if (commandWord.equals("delete"))
-	    ;
+	    ;//delete(commandLine, currentFile);
 	else if (commandWord.equals("exit"))
 	    System.exit(0);
     }
 
-    // Displays the contents of the file
+    // Displays the contents of the file or a message if file is empty
     private static void display(File f) {
 	Scanner fin;
 	int i = 0;
@@ -92,7 +93,16 @@ public class TextBuddy {
     private static void add(String commandLine, File f) {
 	String inputText = removeFirstWord(commandLine);
 
+	writeToFile(inputText, f);
+
+	System.out.println("Added to " + f.getName() + ": \"" + inputText
+		+ "\"");
+    }
+
+    // The actual Writing of text to file
+    private static void writeToFile(String inputText, File f) {
 	BufferedWriter fout;
+
 	try {
 	    fout = new BufferedWriter(new FileWriter(f.getName(), true));
 
@@ -102,14 +112,115 @@ public class TextBuddy {
 
 	    fout.close();
 	} catch (IOException e) {
-	    System.out.println("Error writing to file.");
+	    System.out.println("Error writing to file");
+	    e.printStackTrace();
+	}
+    }
+
+    // Performs the delete command
+ /*   private static void delete(String commandLine, File f) {
+	int deleteParameter;
+	String deletedText;
+
+	String deleteString = removeFirstWord(commandLine);
+	boolean valid = validateDeleteParameter(deleteString, f);
+
+	if (valid) {
+	    deleteParameter = Integer.parseInt(deleteString);
+	    deletedText = removeLine(deleteParameter, f);
+	    System.out.println("Deleted from " + f.getName() + ": \""
+		    + deletedText + "\"");
+	} else {
+	    System.out.println("\"" + deleteString
+		    + "\" is not a valid parameter");
+	}
+    }
+
+    // The actual deletion of indicated line from file
+    // Returns the deleted line
+    private static String removeLine(int deleteParameter, File f) {
+	int lineCount = 0;
+	String tempString, returnString = "";
+	Queue<String> lines = new LinkedList<String>();
+	Scanner fin;
+
+	try {
+	    fin = new Scanner(f);
+
+	    while (fin.hasNext()) {
+		lineCount++;
+		tempString = fin.nextLine();
+
+		if (lineCount != deleteParameter)
+		    lines.offer(tempString);
+		else
+		    returnString = tempString;
+	    }
+	    fin.close();
+
+	    f.delete();
+	    f.createNewFile();
+
+	    while (!lines.isEmpty()) {
+		tempString = lines.poll();
+		writeToFile(tempString, f);
+	    }
+
+	} catch (FileNotFoundException e) {
+	    System.out.println("File not found during removal of line");
+	    e.printStackTrace();
+	} catch (IOException e) {
+	    System.out.println("Error creating file during delete");
 	    e.printStackTrace();
 	}
 
-	System.out.println("Added to " + f.getName() + ": \"" + inputText
-		+ "\"");
+	return returnString;
     }
 
+    private static boolean validateDeleteParameter(String deleteString, File f) {
+	boolean lineInFile = Integer.valueOf(deleteString) <= numberOfLines(f);
+
+	return ((numberOfWords(deleteString) == 1) && areDigits(deleteString) && lineInFile);
+    }
+
+    private static int numberOfLines(File f) {
+	int count = 0;
+	Scanner fin;
+
+	try {
+	    fin = new Scanner(f);
+
+	    while (fin.hasNext()) {
+		count++;
+		fin.nextLine();
+	    }
+	    fin.close();
+	} catch (FileNotFoundException e) {
+	    System.out.println("File not found while counting lines");
+	    e.printStackTrace();
+	}
+
+	return count;
+    }
+
+    private static int numberOfWords(String s) {
+	StringTokenizer st = new StringTokenizer(s);
+	return st.countTokens();
+    }
+
+    private static boolean areDigits(String deleteString) {
+	boolean areDigits;
+
+	areDigits = true;
+	for (char c : deleteString.toCharArray()) {
+	    if (!Character.isDigit(c)) {
+		areDigits = false;
+		break;
+	    }
+	}
+	return areDigits;
+    }
+*/
     private static boolean isEmpty(File f) {
 	return f.length() <= 0;
     }
