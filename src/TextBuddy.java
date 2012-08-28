@@ -47,7 +47,7 @@ public class TextBuddy {
 	else if (commandWord.equals("add"))
 	    add(commandLine, currentFile);
 	else if (commandWord.equals("delete"))
-	    ;//delete(commandLine, currentFile);
+	    delete(commandLine, currentFile);
 	else if (commandWord.equals("exit"))
 	    System.exit(0);
     }
@@ -118,7 +118,7 @@ public class TextBuddy {
     }
 
     // Performs the delete command
- /*   private static void delete(String commandLine, File f) {
+    private static void delete(String commandLine, File f) {
 	int deleteParameter;
 	String deletedText;
 
@@ -220,7 +220,7 @@ public class TextBuddy {
 	}
 	return areDigits;
     }
-*/
+    
     private static boolean isEmpty(File f) {
 	return f.length() <= 0;
     }
