@@ -3,42 +3,47 @@ import java.io.*;
 
 public class TextBuddy {
 	public static void main(String args[]) throws IOException {
-		String fileName = args[0];
-		String command;
-
-		File f;
-		f = new File(fileName);
-		if (!f.exists())
-			f.createNewFile();
-
+		String fileName = args[0], command;
+		
 		Scanner sc = new Scanner(System.in);
 
-		System.out.println("Welcome to TextBuddy. " + fileName
-				+ " is ready to use.");
+		File currentFile = openFile(fileName);
+		displayWelcomeMessage(fileName);
 
 		while (true) {
 			System.out.print("command: ");
 			command = sc.nextLine();
-			processCommand(command, f);
+			processCommand(command, currentFile);
 		}
 	}
 
-	// display add delete clear
-	public static void processCommand(String commandLine, File f) {
+	private static void displayWelcomeMessage(String fileName) {
+		System.out.println("Welcome to TextBuddy. " + fileName
+				+ " is ready to use.");
+	}
+
+	private static File openFile(String fileName) throws IOException {
+		File f;
+		f = new File(fileName);
+		if (!f.exists()) f.createNewFile();
+		return f;
+	}
+
+	private static void processCommand(String commandLine, File currentFile) {
 		String commandWord;
-		int commanddisParameter, i;
+		int commandParameter, i;
 		StringTokenizer tokenizedCommand = new StringTokenizer(commandLine);
 
 		commandWord = tokenizedCommand.nextToken();
 		if (commandWord.equals("display")) {
 			try {
-				display(f);
+				display(currentFile);
 			} catch (FileNotFoundException e) {
 				System.out.println("file for display not found");
 				e.printStackTrace();
 			}
 		} else if (commandWord.equals("clear"))
-			clear(f);
+			clear(currentFile);
 		else if (commandWord.equals("add"))
 			;
 		else if (commandWord.equals("delete"))
