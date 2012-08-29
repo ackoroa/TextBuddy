@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -50,6 +51,8 @@ public class TextBuddy {
 	    delete(commandLine, currentFile);
 	else if (commandWord.equals("exit"))
 	    System.exit(0);
+	else
+	    System.out.println(commandWord + " is not a valid command");
     }
 
     // Displays the contents of the file or a message if file is empty
@@ -76,12 +79,13 @@ public class TextBuddy {
 	}
     }
 
-    // Performs the clear operation
+    // Performs the clear command's operation
     private static void clear(File f) {
 	clearFile(f);
 	System.out.println("All contents deleted from " + f.getName());
     }
 
+    // The actual clearing of file
     private static void clearFile(File f) {
 	BufferedWriter fout;
 
@@ -95,7 +99,7 @@ public class TextBuddy {
 	}
     }
 
-    // Performs the add operation
+    // Performs the add command's operation
     private static void add(String commandLine, File f) {
 	String inputText = removeFirstWord(commandLine);
 
@@ -123,7 +127,7 @@ public class TextBuddy {
 	}
     }
 
-    // Performs the delete command
+    // Performs the delete command's operation
     private static void delete(String commandLine, File f) {
 	int deleteParameter;
 	String deletedText;
@@ -145,9 +149,26 @@ public class TextBuddy {
     // The actual deletion of indicated line from file
     // Returns the deleted line
     private static String removeLine(int deleteParameter, File f) {
-	int lineCount = 0;
-	String tempString, returnString = "";
+	String tempString, deletedString = "";
 	Queue<String> lines = new LinkedList<String>();
+
+	deletedString = copyUndeletedLinesToQueue(deleteParameter, f, lines);
+	clearFile(f);
+
+	while (!lines.isEmpty()) {
+	    tempString = lines.poll();
+	    writeToFile(tempString, f);
+	}
+
+	return deletedString;
+    }
+
+    // Copies file content to lines Queue, except for the deleted line
+    // Returns the deleted line
+    private static String copyUndeletedLinesToQueue(int deleteParameter,
+	    File f, Queue<String> lines) {
+	int lineCount = 0;
+	String tempString, deletedString = "";
 	Scanner fin;
 
 	try {
@@ -160,29 +181,25 @@ public class TextBuddy {
 		if (lineCount != deleteParameter)
 		    lines.offer(tempString);
 		else
-		    returnString = tempString;
+		    deletedString = tempString;
 	    }
 	    fin.close();
-
-	    clearFile(f);
-
-	    while (!lines.isEmpty()) {
-		tempString = lines.poll();
-		writeToFile(tempString, f);
-	    }
-
 	} catch (FileNotFoundException e) {
-	    System.out.println("File not found during removal of line");
+	    System.out.println("File not found during delete");
 	    e.printStackTrace();
 	}
 
-	return returnString;
+	return deletedString;
     }
 
     private static boolean validateDeleteParameter(String deleteString, File f) {
-	boolean lineInFile = Integer.valueOf(deleteString) <= numberOfLines(f);
+	boolean lineInFile;
 
-	return ((numberOfWords(deleteString) == 1) && areDigits(deleteString) && lineInFile);
+	if (areDigits(deleteString) && (numberOfWords(deleteString) == 1)) {
+	    lineInFile = Integer.valueOf(deleteString) <= numberOfLines(f);
+	    return (lineInFile);
+	}
+	return false;
     }
 
     private static int numberOfLines(File f) {
