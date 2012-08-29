@@ -1,3 +1,19 @@
+/* TextBuddy by Arnold Christopher Koroa
+ * A0092101Y
+ * 
+ * This is a simple text editor as specified in NUS CS2103T CE1 problem statement
+ * 
+ * It is assumed that the input will be from the keyboard or a redirected text file. 
+ * If input comes from a redirected text file, the displayed messages might not look 
+ * exactly like the given example as the commands entered will not be shown.
+ * 
+ * It is also assumed that the argument passed into the program will be a valid plain
+ * text format file. 
+ * 
+ * The text file used is assumed to be small as some of the implementations might
+ * not be very efficient for large files.
+ */
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -193,11 +209,11 @@ public class TextBuddy {
     }
 
     private static boolean validateDeleteParameter(String deleteString, File f) {
-	boolean lineInFile;
+	boolean lineIsInFile;
 
 	if (areDigits(deleteString) && (numberOfWords(deleteString) == 1)) {
-	    lineInFile = Integer.valueOf(deleteString) <= numberOfLines(f);
-	    return (lineInFile);
+	    lineIsInFile = Integer.valueOf(deleteString) <= numberOfLines(f);
+	    return lineIsInFile;
 	}
 	return false;
     }
