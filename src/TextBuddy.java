@@ -76,20 +76,26 @@ public class TextBuddy {
 	}
     }
 
-    // Clears the file.
+    // Performs the clear operation
     private static void clear(File f) {
-	try {
-	    f.delete();
-	    f.createNewFile();
-	} catch (IOException e) {
-	    System.out.println("IOException: Error creating file during clear");
-	    e.printStackTrace();
-	}
-
+	clearFile(f);
 	System.out.println("All contents deleted from " + f.getName());
     }
 
-    // Appends user input to file
+    private static void clearFile(File f) {
+	BufferedWriter fout;
+
+	try {
+	    fout = new BufferedWriter(new FileWriter(f.getName(), false));
+	    fout.write("");
+	    fout.close();
+	} catch (IOException e) {
+	    System.out.println("IOException during clear");
+	    e.printStackTrace();
+	}
+    }
+
+    // Performs the add operation
     private static void add(String commandLine, File f) {
 	String inputText = removeFirstWord(commandLine);
 
@@ -158,8 +164,7 @@ public class TextBuddy {
 	    }
 	    fin.close();
 
-	    f.delete();
-	    f.createNewFile();
+	    clearFile(f);
 
 	    while (!lines.isEmpty()) {
 		tempString = lines.poll();
@@ -168,9 +173,6 @@ public class TextBuddy {
 
 	} catch (FileNotFoundException e) {
 	    System.out.println("File not found during removal of line");
-	    e.printStackTrace();
-	} catch (IOException e) {
-	    System.out.println("Error creating file during delete");
 	    e.printStackTrace();
 	}
 
@@ -220,7 +222,7 @@ public class TextBuddy {
 	}
 	return areDigits;
     }
-    
+
     private static boolean isEmpty(File f) {
 	return f.length() <= 0;
     }
