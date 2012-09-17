@@ -1,4 +1,11 @@
-import static org.junit.Assert.*;
+/* Tester for TextBuddy V1.0 (CE1 submission)
+ * 
+ * This test is exactly as documented in the CE1 submission pdf
+ * This test is used for regression testing in the implementation
+ * of CE2 features and also as practice for Unit Testing methods 
+ */
+
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +13,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 public class TextBuddyTest {
+    
     @Test
     public void testTextBuddy() {
 	String fileName = "testFile.txt";
