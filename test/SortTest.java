@@ -37,6 +37,9 @@ public class SortTest {
 	testOneCommand("sort file",
 		("Sorted alphabetically: " + fileName),
 		"sort", file);
+	testOneCommand("display after sort", 
+		("1. and fell\n2. jumped over the moon\n3. little brown fox\n"),
+		"display", file);
     }
 
     private void testOneCommand(String description, String expected,
