@@ -18,14 +18,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class TextBuddy {
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) {
 	String fileName = args[0], command, feedback;
 
 	Scanner sc = new Scanner(System.in);
@@ -45,11 +44,17 @@ public class TextBuddy {
 	return ("Welcome to TextBuddy. " + fileName + " is ready to use.");
     }
 
-    private static File openFile(String fileName) throws IOException {
+    private static File openFile(String fileName) {
 	File file;
 	file = new File(fileName);
-	if (!file.exists())
-	    file.createNewFile();
+	    
+	try {
+	    if (!file.exists())	file.createNewFile();
+	} catch (IOException e) {
+	    System.out.println("Error opening/creating file");
+	    e.printStackTrace();
+	    System.exit(1);
+	}
 	return file;
     }
 
