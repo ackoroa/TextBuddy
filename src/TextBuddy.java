@@ -294,7 +294,7 @@ public class TextBuddy {
 		while (inputFile.hasNext()) {
 		    lineCount++;
 		    currString = inputFile.nextLine();
-		    if (currString.contains(searchString)) {
+		    if (currString.toLowerCase().contains(searchString.toLowerCase())) {
 			feedbackBuilder.append(lineCount + ". " + currString
 				+ "\n");
 		    }

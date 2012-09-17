@@ -45,6 +45,9 @@ public class SearchTest {
 	testOneCommand("search the",
 		("1. The little brown fox\n2. jumped over the moon\n"),
 		"search the", file);
+	testOneCommand("clears file after test",
+		("All contents deleted from " + fileName), 
+		"clear", file);
     }
 
     private void testOneCommand(String description, String expected,
