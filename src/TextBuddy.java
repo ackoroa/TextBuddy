@@ -190,7 +190,8 @@ public class TextBuddy {
 	String tempString, deletedString = "";
 	Queue<String> lines = new LinkedList<String>();
 
-	deletedString = copyUndeletedLinesToQueue(deleteParameter, file, lines);
+	deletedString = insertUndeletedLinesToQueue(deleteParameter, file,
+		lines);
 	clearFile(file);
 
 	while (!lines.isEmpty()) {
@@ -203,7 +204,7 @@ public class TextBuddy {
 
     // Copies file content to lines Queue, except for the deleted line
     // Returns the deleted line
-    private static String copyUndeletedLinesToQueue(int deleteParameter,
+    private static String insertUndeletedLinesToQueue(int deleteParameter,
 	    File file, Queue<String> lines) {
 	int lineCount = 0;
 	String tempString, deletedString = "";
@@ -244,21 +245,8 @@ public class TextBuddy {
 
     // perform the sort command's operation
     private static String sort(File file) {
-	PriorityQueue<String> lineSorter = new PriorityQueue<String>(
-		numberOfLines(file), new IgnoreCaseStringComparator());
-
-	Scanner inputFile;
-		
-	try {
-	    inputFile = new Scanner(file);
-	    while (inputFile.hasNext()) {
-		lineSorter.add(inputFile.nextLine());
-	    }
-	    inputFile.close();
-	} catch (FileNotFoundException e) {
-	    System.out.println("File not found during delete");
-	    e.printStackTrace();
-	}
+	PriorityQueue<String> lineSorter;
+	lineSorter = insertLinesToLineSorter(file);
 
 	clearFile(file);
 	while (!lineSorter.isEmpty()) {
@@ -266,6 +254,27 @@ public class TextBuddy {
 	}
 
 	return ("Sorted alphabetically: " + file.getName());
+    }
+
+    private static PriorityQueue<String> insertLinesToLineSorter(File file) {
+	PriorityQueue<String> lineSorter = new PriorityQueue<String>(
+		numberOfLines(file), new IgnoreCaseStringComparator());
+
+	Scanner inputFile;
+
+	try {
+	    inputFile = new Scanner(file);
+
+	    while (inputFile.hasNext())
+		lineSorter.add(inputFile.nextLine());
+
+	    inputFile.close();
+	} catch (FileNotFoundException e) {
+	    System.out.println("File not found during delete");
+	    e.printStackTrace();
+	}
+
+	return lineSorter;
     }
 
     private static int numberOfLines(File file) {
