@@ -278,36 +278,42 @@ public class TextBuddy {
     }
 
     // performs the search command's operation
+    // can only search for one word
     private static String search(String commandLine, File file) {
 	String searchString = removeFirstWord(commandLine), currString;
 	StringBuilder feedbackBuilder = new StringBuilder();
-	int lineCount = 0;
+	int lineCount;
 
-	if (!validSearchParameter(searchString))
-	    return ("\"" + searchString + "\" is not a valid search parameter");
-	else {
+	if (validSearchParameter(searchString)) {
 	    Scanner inputFile;
 
 	    try {
 		inputFile = new Scanner(file);
 
+		lineCount = 0;
 		while (inputFile.hasNext()) {
 		    lineCount++;
 		    currString = inputFile.nextLine();
-		    if (currString.toLowerCase().contains(searchString.toLowerCase())) {
+		    if (searchHit(searchString, currString)) {
 			feedbackBuilder.append(lineCount + ". " + currString
 				+ "\n");
 		    }
 		}
-	
+
 		inputFile.close();
 	    } catch (FileNotFoundException e) {
 		System.out.println("Cannot read file during search");
 		e.printStackTrace();
 	    }
+	} else {
+	    return ("\"" + searchString + "\" is not a valid search parameter");
 	}
 
 	return feedbackBuilder.toString();
+    }
+
+    private static boolean searchHit(String searchString, String currString) {
+	return currString.toLowerCase().contains(searchString.toLowerCase());
     }
 
     private static boolean validSearchParameter(String searchString) {
