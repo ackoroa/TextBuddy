@@ -1,3 +1,8 @@
+/* Tester for TextBuddy.sort(file)
+ * 
+ * Tests the functionality of sort
+ */
+
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
@@ -34,12 +39,30 @@ public class SortTest {
 	testOneCommand("more adds",
 		("Added to " + fileName + ": \"and fell\""),
 		"add and fell", file);
+	testOneCommand("display before sort", 
+		("1. little brown fox\n2. jumped over the moon\n3. and fell\n"),
+		"display", file);
 	testOneCommand("sort file",
 		("Sorted alphabetically: " + fileName),
 		"sort", file);
 	testOneCommand("display after sort", 
 		("1. and fell\n2. jumped over the moon\n3. little brown fox\n"),
 		"display", file);
+	testOneCommand("more adds",
+		("Added to " + fileName + ": \"BOOM!\""),
+		"add BOOM!", file);
+	testOneCommand("display before sort", 
+		("1. and fell\n2. jumped over the moon\n3. little brown fox\n4. BOOM!\n"),
+		"display", file);
+	testOneCommand("sort file",
+		("Sorted alphabetically: " + fileName),
+		"sort", file);
+	testOneCommand("display after sort", 
+		("1. and fell\n2. BOOM!\n3. jumped over the moon\n4. little brown fox\n"),
+		"display", file);
+	testOneCommand("clears file after test",
+		("All contents deleted from " + fileName), 
+		"clear", file);
     }
 
     private void testOneCommand(String description, String expected,
