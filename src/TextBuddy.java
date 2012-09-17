@@ -81,6 +81,8 @@ public class TextBuddy {
 	    return delete(commandLine, currentFile);
 	else if (commandWord.equals("sort"))
 	    return sort(currentFile);
+	else if (commandWord.equals("search"))
+	    return search(commandLine, currentFile);
 	else if (commandWord.equals("exit"))
 	    System.exit(0);
 
@@ -173,9 +175,8 @@ public class TextBuddy {
 	String deletedText;
 
 	String deleteString = removeFirstWord(commandLine);
-	boolean valid = validateDeleteParameter(deleteString, file);
-
-	if (valid) {
+	
+	if (validDeleteParameter(deleteString, file)) {
 	    deleteParameter = Integer.parseInt(deleteString);
 	    deletedText = removeLine(deleteParameter, file);
 	    return ("Deleted from " + file.getName() + ": \"" + deletedText + "\"");
@@ -232,7 +233,7 @@ public class TextBuddy {
     }
 
     // Check if delete's parameter is valid (a number and not out of bound)
-    private static boolean validateDeleteParameter(String deleteString,
+    private static boolean validDeleteParameter(String deleteString,
 	    File file) {
 	boolean lineIsInFile;
 
@@ -275,6 +276,41 @@ public class TextBuddy {
 	}
 
 	return lineSorter;
+    }
+    
+    // performs the search command's operation
+    private static String search(String commandLine, File file){
+	String searchString = removeFirstWord(commandLine), currString;
+	StringBuilder feedbackBuilder = new StringBuilder();
+	int lineCount = 0;
+	
+	if(!validSearchParameter(searchString))
+	    return ("\"" + searchString + "\" is not a valid search parameter");
+	else{
+	    Scanner inputFile;
+	    
+	    try {
+		inputFile = new Scanner(file);
+		
+		while(inputFile.hasNext()){
+		    lineCount++;
+		    currString = inputFile.nextLine();
+		    if(currString.contains(searchString)){
+			feedbackBuilder.append(lineCount + ". " + currString + "\n");
+		    }
+		}
+		
+	    } catch (FileNotFoundException e) {
+		System.out.println("Cannot read file during search");
+		e.printStackTrace();
+	    }
+	}
+	
+	return feedbackBuilder.toString();
+    }
+
+    private static boolean validSearchParameter(String searchString) {
+	return numberOfWords(searchString) == 1;
     }
 
     private static int numberOfLines(File file) {
