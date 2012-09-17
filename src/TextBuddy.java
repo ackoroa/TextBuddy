@@ -13,7 +13,6 @@
  * The text file used is assumed to be small as some of the implementations might
  * not be very efficient for large files.
  */
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,78 +26,85 @@ import java.util.StringTokenizer;
 
 public class TextBuddy {
     public static void main(String args[]) throws IOException {
-	String fileName = args[0], command;
+	String fileName = args[0], command, feedback;
 
 	Scanner sc = new Scanner(System.in);
 
 	File currentFile = openFile(fileName);
-	displayWelcomeMessage(fileName);
+	showToUser(generateWelcomeMessage(fileName));
 
 	while (true) {
 	    System.out.print("command: ");
 	    command = sc.nextLine();
-	    processCommand(command, currentFile);
+	    feedback = processCommand(command, currentFile);
+	    showToUser(feedback);
 	}
     }
 
-    private static void displayWelcomeMessage(String fileName) {
-	System.out.println("Welcome to TextBuddy. " + fileName
-		+ " is ready to use.");
+    private static String generateWelcomeMessage(String fileName) {
+	return ("Welcome to TextBuddy. " + fileName + " is ready to use.");
     }
 
     private static File openFile(String fileName) throws IOException {
-	File f;
-	f = new File(fileName);
-	if (!f.exists())
-	    f.createNewFile();
-	return f;
+	File file;
+	file = new File(fileName);
+	if (!file.exists())
+	    file.createNewFile();
+	return file;
     }
 
-    private static void processCommand(String commandLine, File currentFile) {
+    public static String processCommand(String commandLine, File currentFile) {
 	String commandWord = getFirstWord(commandLine);
 
 	if (commandWord.equals("display"))
-	    display(currentFile);
+	    return display(currentFile);
 	else if (commandWord.equals("clear"))
-	    clear(currentFile);
+	    return clear(currentFile);
 	else if (commandWord.equals("add"))
-	    add(commandLine, currentFile);
+	    return add(commandLine, currentFile);
 	else if (commandWord.equals("delete"))
-	    delete(commandLine, currentFile);
+	    return delete(commandLine, currentFile);
 	else if (commandWord.equals("exit"))
 	    System.exit(0);
-	else
-	    System.out.println(commandWord + " is not a valid command");
+
+	return (commandWord + " is not a valid command");
+    }
+
+    // shows text to user
+    private static void showToUser(String text) {
+	System.out.println(text);
     }
 
     // Displays the contents of the file or a message if file is empty
-    private static void display(File file) {
+    private static String display(File file) {
 	Scanner inputFile;
 	int i = 0;
+	StringBuilder feedbackBuilder = new StringBuilder();
 
 	if (isEmpty(file)) {
-	    System.out.println(file.getName() + " is empty");
+	    return (file.getName() + " is empty");
 	} else {
 	    try {
 		inputFile = new Scanner(file);
 
 		while (inputFile.hasNext()) {
 		    i++;
-		    System.out.println(i + ". " + inputFile.nextLine());
+		    feedbackBuilder.append(i + ". " + inputFile.nextLine()
+			    + "\n");
 		}
 
 		inputFile.close();
 	    } catch (FileNotFoundException e) {
-		System.out.println("File for display not found.");
-		e.printStackTrace();
+		return "File for display not found.";
 	    }
 	}
+	return feedbackBuilder.toString();
     }
 
     // Performs the clear command's operation
-    private static void clear(File file) {
+    private static String clear(File file) {
 	clearFile(file);
-	System.out.println("All contents deleted from " + file.getName());
+	return ("All contents deleted from " + file.getName());
     }
 
     // The actual clearing of file
@@ -106,7 +112,8 @@ public class TextBuddy {
 	BufferedWriter outputFile;
 
 	try {
-	    outputFile = new BufferedWriter(new FileWriter(file.getName(), false));
+	    outputFile = new BufferedWriter(new FileWriter(file.getName(),
+		    false));
 	    outputFile.write("");
 	    outputFile.close();
 	} catch (IOException e) {
@@ -116,13 +123,12 @@ public class TextBuddy {
     }
 
     // Performs the add command's operation
-    private static void add(String commandLine, File file) {
+    private static String add(String commandLine, File file) {
 	String inputText = removeFirstWord(commandLine);
 
 	writeToFile(inputText, file);
 
-	System.out.println("Added to " + file.getName() + ": \"" + inputText
-		+ "\"");
+	return ("Added to " + file.getName() + ": \"" + inputText + "\"");
     }
 
     // The actual Writing of text to file
@@ -130,7 +136,8 @@ public class TextBuddy {
 	BufferedWriter outputFile;
 
 	try {
-	    outputFile = new BufferedWriter(new FileWriter(file.getName(), true));
+	    outputFile = new BufferedWriter(
+		    new FileWriter(file.getName(), true));
 
 	    if (!isEmpty(file))
 		outputFile.newLine();
@@ -144,7 +151,7 @@ public class TextBuddy {
     }
 
     // Performs the delete command's operation
-    private static void delete(String commandLine, File file) {
+    private static String delete(String commandLine, File file) {
 	int deleteParameter;
 	String deletedText;
 
@@ -154,11 +161,9 @@ public class TextBuddy {
 	if (valid) {
 	    deleteParameter = Integer.parseInt(deleteString);
 	    deletedText = removeLine(deleteParameter, file);
-	    System.out.println("Deleted from " + file.getName() + ": \""
-		    + deletedText + "\"");
+	    return ("Deleted from " + file.getName() + ": \"" + deletedText + "\"");
 	} else {
-	    System.out.println("\"" + deleteString
-		    + "\" is not a valid parameter");
+	    return ("\"" + deleteString + "\" is not a valid parameter");
 	}
     }
 
@@ -182,24 +187,24 @@ public class TextBuddy {
     // Copies file content to lines Queue, except for the deleted line
     // Returns the deleted line
     private static String copyUndeletedLinesToQueue(int deleteParameter,
-	    File f, Queue<String> lines) {
+	    File file, Queue<String> lines) {
 	int lineCount = 0;
 	String tempString, deletedString = "";
-	Scanner fin;
+	Scanner inputFile;
 
 	try {
-	    fin = new Scanner(f);
+	    inputFile = new Scanner(file);
 
-	    while (fin.hasNext()) {
+	    while (inputFile.hasNext()) {
 		lineCount++;
-		tempString = fin.nextLine();
+		tempString = inputFile.nextLine();
 
 		if (lineCount != deleteParameter)
 		    lines.offer(tempString);
 		else
 		    deletedString = tempString;
 	    }
-	    fin.close();
+	    inputFile.close();
 	} catch (FileNotFoundException e) {
 	    System.out.println("File not found during delete");
 	    e.printStackTrace();
@@ -208,7 +213,8 @@ public class TextBuddy {
 	return deletedString;
     }
 
-    private static boolean validateDeleteParameter(String deleteString, File file) {
+    private static boolean validateDeleteParameter(String deleteString,
+	    File file) {
 	boolean lineIsInFile;
 
 	if (areDigits(deleteString) && (numberOfWords(deleteString) == 1)) {
