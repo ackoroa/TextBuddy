@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -25,6 +26,13 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class TextBuddy {
+    // a comparator that compares 2 strings while ignoring case
+    static class IgnoreCaseStringComparator implements Comparator<String> {
+	public int compare(String s1, String s2) {
+	    return s1.compareToIgnoreCase(s2);
+	}
+    }
+
     public static void main(String args[]) {
 	String fileName = args[0], command, feedback;
 
@@ -48,9 +56,10 @@ public class TextBuddy {
     private static File openFile(String fileName) {
 	File file;
 	file = new File(fileName);
-	    
+
 	try {
-	    if (!file.exists())	file.createNewFile();
+	    if (!file.exists())
+		file.createNewFile();
 	} catch (IOException e) {
 	    System.out.println("Error opening/creating file");
 	    e.printStackTrace();
@@ -232,28 +241,30 @@ public class TextBuddy {
 	}
 	return false;
     }
-    
+
     // perform the sort command's operation
-    private static String sort(File file){
+    private static String sort(File file) {
+	PriorityQueue<String> lineSorter = new PriorityQueue<String>(
+		numberOfLines(file), new IgnoreCaseStringComparator());
+
 	Scanner inputFile;
-	PriorityQueue<String> lineSorter = new PriorityQueue<String>();
-	
+		
 	try {
 	    inputFile = new Scanner(file);
 	    while (inputFile.hasNext()) {
-	    	lineSorter.add(inputFile.nextLine());    
+		lineSorter.add(inputFile.nextLine());
 	    }
 	    inputFile.close();
 	} catch (FileNotFoundException e) {
 	    System.out.println("File not found during delete");
 	    e.printStackTrace();
 	}
-	
+
 	clearFile(file);
-	while(!lineSorter.isEmpty()){
-	    writeToFile(lineSorter.poll(),file);
+	while (!lineSorter.isEmpty()) {
+	    writeToFile(lineSorter.poll(), file);
 	}
-	
+
 	return ("Sorted alphabetically: " + file.getName());
     }
 
