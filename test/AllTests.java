@@ -4,7 +4,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 
 @RunWith(Suite.class)
-@SuiteClasses({ SortTest.class, TextBuddyTest.class })
+@SuiteClasses({ SearchTest.class, SortTest.class, TextBuddyTest.class })
 public class AllTests {
 
 }
