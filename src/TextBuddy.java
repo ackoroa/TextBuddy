@@ -175,7 +175,7 @@ public class TextBuddy {
 	String deletedText;
 
 	String deleteString = removeFirstWord(commandLine);
-	
+
 	if (validDeleteParameter(deleteString, file)) {
 	    deleteParameter = Integer.parseInt(deleteString);
 	    deletedText = removeLine(deleteParameter, file);
@@ -233,8 +233,7 @@ public class TextBuddy {
     }
 
     // Check if delete's parameter is valid (a number and not out of bound)
-    private static boolean validDeleteParameter(String deleteString,
-	    File file) {
+    private static boolean validDeleteParameter(String deleteString, File file) {
 	boolean lineIsInFile;
 
 	if (areDigits(deleteString) && (numberOfWords(deleteString) == 1)) {
@@ -277,35 +276,37 @@ public class TextBuddy {
 
 	return lineSorter;
     }
-    
+
     // performs the search command's operation
-    private static String search(String commandLine, File file){
+    private static String search(String commandLine, File file) {
 	String searchString = removeFirstWord(commandLine), currString;
 	StringBuilder feedbackBuilder = new StringBuilder();
 	int lineCount = 0;
-	
-	if(!validSearchParameter(searchString))
+
+	if (!validSearchParameter(searchString))
 	    return ("\"" + searchString + "\" is not a valid search parameter");
-	else{
+	else {
 	    Scanner inputFile;
-	    
+
 	    try {
 		inputFile = new Scanner(file);
-		
-		while(inputFile.hasNext()){
+
+		while (inputFile.hasNext()) {
 		    lineCount++;
 		    currString = inputFile.nextLine();
-		    if(currString.contains(searchString)){
-			feedbackBuilder.append(lineCount + ". " + currString + "\n");
+		    if (currString.contains(searchString)) {
+			feedbackBuilder.append(lineCount + ". " + currString
+				+ "\n");
 		    }
 		}
-		
+	
+		inputFile.close();
 	    } catch (FileNotFoundException e) {
 		System.out.println("Cannot read file during search");
 		e.printStackTrace();
 	    }
 	}
-	
+
 	return feedbackBuilder.toString();
     }
 

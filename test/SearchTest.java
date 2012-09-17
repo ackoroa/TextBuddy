@@ -42,6 +42,9 @@ public class SearchTest {
 	testOneCommand("search brown",
 		("1. The little brown fox\n"),
 		"search brown", file);
+	testOneCommand("search the",
+		("1. The little brown fox\n2. jumped over the moon\n"),
+		"search the", file);
     }
 
     private void testOneCommand(String description, String expected,
