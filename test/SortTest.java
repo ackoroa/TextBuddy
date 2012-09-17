@@ -1,15 +1,14 @@
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.junit.Test;
 
-public class TextBuddyTest {
+public class SortTest {
     
     @Test
-    public void testTextBuddy() {
+    public void testSort() {
 	String fileName = "testFile.txt";
 	File file;
 	file = new File(fileName);

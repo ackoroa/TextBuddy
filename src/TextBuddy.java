@@ -69,6 +69,8 @@ public class TextBuddy {
 	    return add(commandLine, currentFile);
 	else if (commandWord.equals("delete"))
 	    return delete(commandLine, currentFile);
+	else if (commandWord.equals("sort"))
+	    return sort(currentFile);
 	else if (commandWord.equals("exit"))
 	    System.exit(0);
 
@@ -218,6 +220,7 @@ public class TextBuddy {
 	return deletedString;
     }
 
+    // Check if delete's parameter is valid (a number and not out of bound)
     private static boolean validateDeleteParameter(String deleteString,
 	    File file) {
 	boolean lineIsInFile;
@@ -227,6 +230,12 @@ public class TextBuddy {
 	    return lineIsInFile;
 	}
 	return false;
+    }
+    
+    // perform the sort command's operation
+    private static String sort(File file){
+		
+	return ("Sorted alphabetically: " + file.getName());
     }
 
     private static int numberOfLines(File file) {
