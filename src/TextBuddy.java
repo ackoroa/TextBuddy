@@ -19,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -234,7 +235,25 @@ public class TextBuddy {
     
     // perform the sort command's operation
     private static String sort(File file){
-		
+	Scanner inputFile;
+	PriorityQueue<String> lineSorter = new PriorityQueue<String>();
+	
+	try {
+	    inputFile = new Scanner(file);
+	    while (inputFile.hasNext()) {
+	    	lineSorter.add(inputFile.nextLine());    
+	    }
+	    inputFile.close();
+	} catch (FileNotFoundException e) {
+	    System.out.println("File not found during delete");
+	    e.printStackTrace();
+	}
+	
+	clearFile(file);
+	while(!lineSorter.isEmpty()){
+	    writeToFile(lineSorter.poll(),file);
+	}
+	
 	return ("Sorted alphabetically: " + file.getName());
     }
 
