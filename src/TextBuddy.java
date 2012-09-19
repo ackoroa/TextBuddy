@@ -13,11 +13,13 @@
  * The text file used is assumed to be small as some of the implementations might
  * not be very efficient for large files.
  */
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
@@ -26,7 +28,7 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class TextBuddy {
-    // a comparator that compares 2 strings while ignoring case
+    // a internal comparator class that compares 2 strings while ignoring case
     static class IgnoreCaseStringComparator implements Comparator<String> {
 	public int compare(String s1, String s2) {
 	    return s1.compareToIgnoreCase(s2);
@@ -68,6 +70,7 @@ public class TextBuddy {
 	return file;
     }
 
+    //process commandLine and call appropriate functions
     public static String processCommand(String commandLine, File currentFile) {
 	String commandWord = getFirstWord(commandLine);
 
@@ -94,7 +97,7 @@ public class TextBuddy {
 	System.out.println(text);
     }
 
-    // Displays the contents of the file or a message if file is empty
+    // Displays the contents of the file, or a message if file is empty
     private static String display(File file) {
 	Scanner inputFile;
 	int i = 0;
@@ -108,8 +111,8 @@ public class TextBuddy {
 
 		while (inputFile.hasNext()) {
 		    i++;
-		    feedbackBuilder.append(i + ". " + inputFile.nextLine()
-			    + "\n");
+		    feedbackBuilder.append(i + ". " + inputFile.nextLine() + 
+			    		   "\n");
 		}
 
 		inputFile.close();
@@ -155,9 +158,8 @@ public class TextBuddy {
 	BufferedWriter outputFile;
 
 	try {
-	    outputFile = new BufferedWriter(
-		    new FileWriter(file.getName(), true));
-
+	    outputFile = new BufferedWriter(new FileWriter(file.getName(), 
+		    					   true) );
 	    if (!isEmpty(file))
 		outputFile.newLine();
 	    outputFile.write(inputText);
@@ -176,7 +178,7 @@ public class TextBuddy {
 
 	String deleteString = removeFirstWord(commandLine);
 
-	if (validDeleteParameter(deleteString, file)) {
+	if (isValidDeleteParameter(deleteString, file)) {
 	    deleteParameter = Integer.parseInt(deleteString);
 	    deletedText = removeLine(deleteParameter, file);
 	    return ("Deleted from " + file.getName() + ": \"" + deletedText + "\"");
@@ -192,7 +194,7 @@ public class TextBuddy {
 	Queue<String> lines = new LinkedList<String>();
 
 	deletedString = insertUndeletedLinesToQueue(deleteParameter, file,
-		lines);
+						    lines);
 	clearFile(file);
 
 	while (!lines.isEmpty()) {
@@ -206,7 +208,8 @@ public class TextBuddy {
     // Copies file content to lines Queue, except for the deleted line
     // Returns the deleted line
     private static String insertUndeletedLinesToQueue(int deleteParameter,
-	    File file, Queue<String> lines) {
+	    					      File file, 
+	    					      Queue<String> lines) {
 	int lineCount = 0;
 	String tempString, deletedString = "";
 	Scanner inputFile;
@@ -233,7 +236,7 @@ public class TextBuddy {
     }
 
     // Check if delete's parameter is valid (a number and not out of bound)
-    private static boolean validDeleteParameter(String deleteString, File file) {
+    private static boolean isValidDeleteParameter(String deleteString, File file) {
 	boolean lineIsInFile;
 
 	if (areDigits(deleteString) && (numberOfWords(deleteString) == 1)) {
@@ -279,12 +282,13 @@ public class TextBuddy {
 
     // performs the search command's operation
     // can only search for one word
+    // displays all lines containing the word afterwards
     private static String search(String commandLine, File file) {
 	String searchString = removeFirstWord(commandLine), currString;
 	StringBuilder feedbackBuilder = new StringBuilder();
 	int lineCount;
 
-	if (validSearchParameter(searchString)) {
+	if (isValidSearchParameter(searchString)) {
 	    Scanner inputFile;
 
 	    try {
@@ -295,8 +299,8 @@ public class TextBuddy {
 		    lineCount++;
 		    currString = inputFile.nextLine();
 		    if (searchHit(searchString, currString)) {
-			feedbackBuilder.append(lineCount + ". " + currString
-				+ "\n");
+			feedbackBuilder.append(lineCount + ". " + currString + 
+				               "\n");
 		    }
 		}
 
@@ -316,7 +320,7 @@ public class TextBuddy {
 	return currString.toLowerCase().contains(searchString.toLowerCase());
     }
 
-    private static boolean validSearchParameter(String searchString) {
+    private static boolean isValidSearchParameter(String searchString) {
 	return numberOfWords(searchString) == 1;
     }
 
